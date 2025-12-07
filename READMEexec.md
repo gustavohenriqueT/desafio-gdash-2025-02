@@ -39,14 +39,6 @@ A arquitetura é composta por cinco camadas:
    - Dashboard para visualização.  
    - Exibe insights, métricas e logs do pipeline.
 
-   graph LR
-    A[Coletor Python] -->|Clima JSON| B(RabbitMQ)
-    B -->|Consome Fila| C[Worker Go]
-    C -->|Dados Tratados| D[NestJS API]
-    D -->|Persistência| E[(MongoDB)]
-    D -->|Insights| F[OpenAI/IA]
-    G[Frontend React] -->|Requisições HTTP| D
-
 ---
 
 ## 🐳 Como rodar tudo via Docker Compose
@@ -178,5 +170,6 @@ Projeto desenvolvido para processo seletivo técnico.
 Dúvidas: abra uma issue no repositório.
 
 ---
+
 
 
