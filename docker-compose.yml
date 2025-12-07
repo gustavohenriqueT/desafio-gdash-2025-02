@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+  # Banco de Dados
+  mongodb:
+    image: mongo:6.0
+    container_name: gdash-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - gdash-network
+
+  # Fila
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: gdash-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - gdash-network
+
+  # Backend
+  backend:
+    build: ./backend
+    container_name: gdash-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://admin:password123@mongodb:27017/gdash?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - gdash-network
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    container_name: gdash-frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - gdash-network
+
+  # Coletor Python
+  collector:
+    build: ./weather-collector
+    container_name: gdash-collector
+    restart: always
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: admin123
+      CITY_NAME: ${CITY_NAME}
+      CITY_LAT: ${CITY_LAT}
+      CITY_LON: ${CITY_LON}
+    depends_on:
+      - rabbitmq
+    networks:
+      - gdash-network
+
+  # Worker Go
+  worker:
+    build: ./weather-worker
+    container_name: gdash-worker
+    restart: always
+    environment:
+      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672/
+      API_URL: http://backend:3000/weather
+    depends_on:
+      - rabbitmq
+      - backend
+    networks:
+      - gdash-network
+
+networks:
+  gdash-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  rabbitmq_data:
