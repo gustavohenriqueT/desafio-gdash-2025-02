@@ -39,7 +39,7 @@ A arquitetura é composta por cinco camadas:
    - Dashboard para visualização.  
    - Exibe insights, métricas e logs do pipeline.
 
-graph LR
+   graph LR
     A[Coletor Python] -->|Clima JSON| B(RabbitMQ)
     B -->|Consome Fila| C[Worker Go]
     C -->|Dados Tratados| D[NestJS API]
@@ -178,4 +178,5 @@ Projeto desenvolvido para processo seletivo técnico.
 Dúvidas: abra uma issue no repositório.
 
 ---
+
 
