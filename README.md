@@ -1,7 +1,7 @@
 # Desafio para o processo seletivo GDASH 2025/02
 
 Repositório destinado aos interessados em participar do processo seletivo GDASH 2025/02.
-
+Para detalhes técnicos profundos de execução, consulte o [📄 Guia de Execução Completo](READMEexec.md).
 ## Sobre o GDASH
 
 No ramo da produção de energia fotovoltaica, há a modalidade de produção compartilhada. Nessa modalidade, diferentes pessoas investem na construção de uma mesma usina fotovoltaica e dividem o retorno finaceiro referente à energia gerada pela usina.
